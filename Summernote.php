@@ -31,7 +31,12 @@ class Summernote extends InputWidget
     public function init()
     {
         $this->options = array_merge($this->defaultOptions, $this->options);
-        $this->clientOptions = array_merge($this->defaultClientOptions, ['lang' => \Yii::$app->language], $this->clientOptions);
+        $this->clientOptions = array_merge($this->defaultClientOptions, $this->clientOptions);
+
+        if (empty($this->clientOptions['lang']) && preg_match('/^[a-z]{2}\-[A-Z]{2}$/', \Yii::$app->language)) {
+            $this->clientOptions['lang'] = \Yii::$app->language;
+        }
+
         parent::init();
     }
 
@@ -64,7 +69,7 @@ class Summernote extends InputWidget
         if (!empty($this->clientOptions['lang']) && $this->clientOptions['lang'] !== 'en-US') {
             SummernoteLanguageAsset::register($view)->language = $this->clientOptions['lang'];
         }
-        
+
         if (!empty($this->plugins) && is_array($this->plugins)) {
             SummernotePluginAsset::register($view)->plugins = $this->plugins;
         }
