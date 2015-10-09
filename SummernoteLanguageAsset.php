@@ -21,7 +21,15 @@ class SummernoteLanguageAsset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        $this->js[] = 'summernote-' . $this->language . '.js';
-        parent::registerAssetFiles($view);
+        $langFile = 'summernote-' . $this->language . '.js';
+
+        if (file_exists(Yii::getAlias($this->sourcePath) . '/' . $langFile)) {
+            $this->js[] = $langFile;
+            parent::registerAssetFiles($view);
+        }
+        else {
+            # Stops publication sourcePath, because it does not make sense
+            $this->sourcePath = null;
+        }
     }
 }
